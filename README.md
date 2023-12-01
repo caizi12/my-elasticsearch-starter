@@ -28,4 +28,64 @@ spring.elasticsearch.connection-timeout=300
 spring.elasticsearch.read-timeout=300
 ```
 
-###3、Demo
+###3、Demo，更多示例可以看单元测试部分
+
+```
+
+
+@SpringBootTest
+public class MyEsServiceTest {
+    @Autowired
+    private MyEsService myEsService;
+
+    @Test
+    public void delIndex() {
+        boolean result = myEsService.deleteIndexIfExist(Student.class);
+        Assert.assertTrue(result);
+    }
+
+    @Test
+    public void delIndexDoc() {
+        String result = myEsService.delIndexDoc("3007", Student.class);
+        System.out.println("delIndexDoc:" + Student.class.getName());
+    }
+
+
+    @Test
+    public void updateMapping() {
+        boolean result = myEsService.updateIndexMapping(Student.class);
+        Assert.assertTrue(result);
+    }
+
+
+    @Test
+    public void updateIndexMapping() {
+        boolean result = myEsService.updateIndexMapping(Shop.class);
+        Assert.assertTrue(result);
+    }
+
+    @Test
+    public void createIndex() {
+        boolean exist = myEsService.existIndex(Student.class);
+        boolean result = false;
+        if (!exist) {
+            result = myEsService.createIndexIfNotExist(Student.class);
+        } else {
+            System.out.println("index exist:" + Student.class.getName());
+        }
+        Assert.assertTrue(result);
+    }
+
+
+    @Test
+    public void addIndexDoc() {
+        Student student = new Student(1000, "张三", "测试索引添加", "哈哈", "三年二班刘", 10, new Date(), null);
+        String documentId = myEsService.addIndexDoc(student);
+        System.out.println("addIndexDoc result:" + documentId);
+        Assert.assertNotNull(documentId);
+    }
+}
+
+
+
+```
